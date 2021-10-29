@@ -11,7 +11,8 @@ from discord.utils import valid_icon_size
 from discord.ext.commands import Bot
 from discord.ext import commands, tasks
 from hurry.filesize import alternative
-
+from qbittorrentapi import Client, client
+from qbittorrentapi import TorrentStates
 
 import platform
 import sys
@@ -25,7 +26,9 @@ else:
 print("Loaded the 'config.json' file")
 
 
+public_qbit = Client(host='qbit.shitbox.media', username=config["public_qbit"]["username"], password=config["public_qbit"]["password"])
 
+private_qbit = Client(host='secure-qbit.shitbox.media', username=config["private_qbit"]["username"], password=config["private_qbit"]["password"])
 
 bot = commands.Bot(command_prefix=">")
 
@@ -144,6 +147,49 @@ async def media(message):
     embed.add_field(name="Music", value=str(size(music_size_proper, system=alternative)), inline=False)
     embed.add_field(name="Summary", value="```Server is currently using " + str(size(total_storage, system=alternative)) + " out of 35 TB (" + size(35000000000000 - total_storage, system=alternative) + " left)```", inline=False)
     await message.send(embed=embed)
+
+@bot.command()
+async def queue(message):
+
+    print(public_qbit.torrents_info(status_filter="downloading"))
+
+    dStr = ''
+    downloadStr = public_qbit.torrents_info(status_filter='downloading')
+    print(downloadStr)
+
+    if (not downloadStr):
+        dStr += 'There is nothing being downloaded.'
+    for j in range(len(downloadStr)):
+        dStr += "|" + (downloadStr[j]['content_path'])[10:] + '\n' + "|" + '\n'
+        dStr += "|" + 'Progress: '
+        dStr += "%" + str((downloadStr[j]['progress'])) + '\n' + '\n'
+        
+
+    embed=discord.Embed(title="Torrent info")
+    embed.set_author(name="Shitbox Media Control Bot")
+    embed.add_field(name="Queue", value="```" + dStr + "```", inline=False)
+    await message.send(embed=embed)
+
+@bot.command()
+async def testy(message):
+    dStr = ''
+    downloadStr = public_qbit.torrents_info(status_filter='downloading')
+    print(downloadStr)
+
+    dStr += '```DOWNLOADING:\n'
+    if (not downloadStr):
+        dStr += 'None.'
+    for j in range(len(downloadStr)):
+        dStr += 'Location and Name:\t'
+        dStr += (downloadStr[j]['content_path']) + '\n'
+        dStr += 'Progress Decimal Percent:\t'
+        dStr += str((downloadStr[j]['progress'])) + '\n'
+    dStr += '```'
+    await message.channel.send(dStr)
+
+
+
+
 
 
 bot.run(config["discord_token"])
