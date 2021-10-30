@@ -204,13 +204,15 @@ async def testy(message):
     await message.channel.send(dStr)
 
 
-@bot.event
-async def on_message(message):
-    if message.author == bot.user:
-        return
+
 
     # Keep this if you want to restrict the bot to #bot-commands only
     # if message.channel.id == 889177222764703865:
     #     await bot.process_commands(message)
 
 bot.run(config["discord_token"])
+
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
