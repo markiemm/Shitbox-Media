@@ -33,7 +33,7 @@ public_qbit = Client(host='qbit.shitbox.media',
 private_qbit = Client(host='secure-qbit.shitbox.media',
                       username=config["private_qbit"]["username"], password=config["private_qbit"]["password"])
 
-bot = commands.Bot(command_prefix=config)
+bot = commands.Bot(command_prefix=config["discord_bot_prefix"])
 bot.remove_command("help")
 
 
