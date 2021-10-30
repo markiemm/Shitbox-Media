@@ -5,7 +5,6 @@ import os
 import platform
 import sys
 import subprocess
-import aiohttp
 # import config
 from discord import channel
 #from discord.ext.commands.core import T, group
@@ -17,8 +16,6 @@ from hurry.filesize import alternative
 from hurry.filesize.filesize import size
 from qbittorrentapi import Client, client
 from qbittorrentapi import TorrentStates
-from nude import Nude  # pip3 install nudepy
-from io import BytesIO
 
 if not os.path.isfile("config.json"):
     sys.exit("'config.json' file could not be detected!")
@@ -33,7 +30,7 @@ public_qbit = Client(host='qbit.shitbox.media',
 private_qbit = Client(host='secure-qbit.shitbox.media',
                       username=config["private_qbit"]["username"], password=config["private_qbit"]["password"])
 
-bot = commands.Bot(command_prefix=config["discord_bot_prefix"])
+bot = commands.Bot(command_prefix=">")
 bot.remove_command("help")
 
 
@@ -215,23 +212,5 @@ async def on_message(message):
     # Keep this if you want to restrict the bot to #bot-commands only
     # if message.channel.id == 889177222764703865:
     #     await bot.process_commands(message)
-
-    # Not sure if it works
-    if config["moderation"]["nude_detection"] is True:
-        if (message.channel.nsfw is not True) and (len(message.attachments) > 0):
-            for i in message.attachments:
-                if i.filename.endswith((".png", ".jpg", ".jpeg")):
-                    async with aiohttp.ClientSession() as session:
-                        async with session.get(i.url) as response:
-                            image_bytes = await response.read()
-                    image_bytes = BytesIO(image_bytes)
-                    n = Nude(image_bytes)
-                    n.parse()
-                    if n.result is True:
-                        i.filename = f"SPOILER_{i.filename}"
-                        spoiler = await i.to_file()
-                        await message.delete()
-                        await message.channel.send(f"Do not send nude images to this channel!")
-
 
 bot.run(config["discord_token"])
