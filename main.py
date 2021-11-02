@@ -166,9 +166,6 @@ async def media(message):
 
 @bot.command()
 async def queue(message):
-
-    print(public_qbit.torrents_info(status_filter="downloading"))
-
     dStr = ''
     downloadStr = public_qbit.torrents_info(status_filter='downloading')
     print(downloadStr)
@@ -176,8 +173,8 @@ async def queue(message):
     if (not downloadStr):
         dStr += 'There is nothing being downloaded.'
     for j in range(len(downloadStr)):
-        dStr += "|" + (downloadStr[j]['content_path'])[10:] + '\n' + "|" + '\n'
-        dStr += "|" + 'Progress: '
+        dStr += (downloadStr[j]['content_path'])[10:] + '\n'
+        dStr += 'Progress: '
         dStr += "%" + str((downloadStr[j]['progress'])) + '\n' + '\n'
 
     embed = discord.Embed(title="Torrent info")
@@ -185,30 +182,6 @@ async def queue(message):
     embed.add_field(name="Queue", value="```" + dStr + "```", inline=False)
     await message.send(embed=embed)
 
-
-@bot.command()
-async def testy(message):
-    dStr = ''
-    downloadStr = public_qbit.torrents_info(status_filter='downloading')
-    print(downloadStr)
-
-    dStr += '```DOWNLOADING:\n'
-    if (not downloadStr):
-        dStr += 'None.'
-    for j in range(len(downloadStr)):
-        dStr += 'Location and Name:\t'
-        dStr += (downloadStr[j]['content_path']) + '\n'
-        dStr += 'Progress Decimal Percent:\t'
-        dStr += str((downloadStr[j]['progress'])) + '\n'
-    dStr += '```'
-    await message.channel.send(dStr)
-
-
-
-
-    # Keep this if you want to restrict the bot to #bot-commands only
-    # if message.channel.id == 889177222764703865:
-    #     await bot.process_commands(message)
 
 bot.run(config["discord_token"])
 
