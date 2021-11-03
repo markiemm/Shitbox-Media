@@ -182,6 +182,15 @@ async def queue(message):
     embed.add_field(name="Queue", value="```" + dStr + "```", inline=False)
     await message.send(embed=embed)
 
+@bot.command()
+async def help(message):
+    embed = discord.Embed(title="Help menu")
+    embed.set_author(name="Shitbox Media Control Bot")
+    embed.add_field(name="Status", value="View the status of the server.", inline=False)
+    embed.add_field(name="Media", value="View storage information.", inline=False)
+    embed.add_field(name="queue", value="View the download queue.", inline=False)
+    await message.send(embed=embed)
+
 
 bot.run(config["discord_token"])
 
