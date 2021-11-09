@@ -38,3 +38,13 @@ async def on_ready():
     print(f"Running on: {platform.system()} {platform.release()} ({os.name})")
     print("-"*22)
     await bot.change_presence(activity=discord.Game("Shitbox"))
+    
+bot.run(config["discord_token"])
+
+
+@bot.event
+async def on_message(message):
+
+    if message.author == bot.user:
+        return
+ 
