@@ -154,7 +154,3 @@ async def on_message(message):
 
     if message.author == bot.user:
         return
-
-
-
-#cum
