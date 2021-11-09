@@ -21,12 +21,6 @@ else:
     print("Loaded the 'config.json' file")
 
 
-public_qbit = Client(host='qbit.shitbox.media',
-                     username=config["public_qbit"]["username"], password=config["public_qbit"]["password"])
-
-private_qbit = Client(host='secure-qbit.shitbox.media',
-                      username=config["private_qbit"]["username"], password=config["private_qbit"]["password"])
-
 bot = commands.Bot(command_prefix=">")
 bot.remove_command("help")
 
