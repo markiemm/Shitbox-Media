@@ -33,6 +33,10 @@ private_qbit = Client(host='secure-qbit.shitbox.media',
 bot = commands.Bot(command_prefix=">")
 bot.remove_command("help")
 
+for filename in os.listdir('./cogs'):
+    if filename.endswith('.py'):
+        bot.load_extension(f'cogs.{filename[:-3]}')
+
 
 @bot.event
 async def on_ready():
@@ -182,14 +186,6 @@ async def queue(message):
     embed.add_field(name="Queue", value="```" + dStr + "```", inline=False)
     await message.send(embed=embed)
 
-@bot.command()
-async def help(message):
-    embed = discord.Embed(title="Help menu")
-    embed.set_author(name="Shitbox Media Control Bot")
-    embed.add_field(name="Status", value="View the status of the service.", inline=False)
-    embed.add_field(name="Media", value="View storage information.", inline=False)
-    embed.add_field(name="queue", value="View the download queue.", inline=False)
-    await message.send(embed=embed)
 
 
 bot.run(config["discord_token"])
