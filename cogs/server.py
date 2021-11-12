@@ -44,15 +44,15 @@ class Server(commands.Cog):
         embed.set_author(name="Shitbox Media Control Bot")
         embed.set_thumbnail(
             url="https://www.nicepng.com/png/full/502-5024580_business-data-storage-icon.png")
-        embed.add_field(name="Downloads" + len(os.listdir(download_dir)), value=str(
+        embed.add_field(name="Downloads (" + str(len(os.listdir(download_dir))) + " downloads)", value=str(
             size(download_size_proper, system=alternative)), inline=False)
-        embed.add_field(name="TV shows" + len(os.listdir(tv_dir)), value=str(
+        embed.add_field(name="TV shows (" + str(len(os.listdir(tv_dir))) + " TV shows)", value=str(
             size(tv_size_proper, system=alternative)), inline=False)
-        embed.add_field(name="Movies" + len(os.listdir(movie_dir)), value=str(
+        embed.add_field(name="Movies (" + str(len(os.listdir(movie_dir))) + " movies)", value=str(
             size(movie_size_proper, system=alternative)), inline=False)
-        embed.add_field(name="Music" + len(os.listdir(music_dir)), value=str(
+        embed.add_field(name="Music (" + str(len(os.listdir(music_dir))) + " albums)", value=str(
             size(music_size_proper, system=alternative)), inline=False)
-        embed.add_field(name="Books" + len(os.listdir(books_dir)), value=str(
+        embed.add_field(name="Books (" + str(len(os.listdir(books_dir + "/Books"))) + " books)", value=str(
             size(books_size_proper, system=alternative)), inline=False)
         embed.add_field(name="Summary", value="```Server is currently using " + str(size(total_storage, system=alternative)) +
                         " out of 35 TB (" + size(35000000000000 - total_storage, system=alternative) + " left)```", inline=False)
