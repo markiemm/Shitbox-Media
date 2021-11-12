@@ -132,9 +132,8 @@ class Service(commands.Cog):
             dStr += 'Progress: '
             dStr += "%" + str((downloadStr[j]['progress'])) + '\n' + '\n'
 
-        embed = discord.Embed(title="Torrent info")
+        embed = discord.Embed(title="Torrent queue", description="```" + dStr[:4080] + "```")
         embed.set_author(name="Shitbox Media Control Bot")
-        embed.add_field(name="Queue", value="```" + dStr[:5500] + "```", inline=False)
         await message.send(embed=embed)
 
 
