@@ -3,8 +3,8 @@ from discord.ext import commands
 import subprocess
 from hurry.filesize import alternative
 from hurry.filesize.filesize import size
-from variables import download_dir, tv_dir, movie_dir, music_dir
-
+from variables import download_dir, tv_dir, movie_dir, music_dir, books_dir
+import os
 
 class Server(commands.Cog):
     def __init__(self, client):
@@ -30,21 +30,30 @@ class Server(commands.Cog):
             ['du', '-s', music_dir]).split()[0].decode('utf-8')
         music_size_proper = int(music_size) * 1020
 
+        books_size = subprocess.check_output(
+            ['du', '-s', books_dir]).split()[0].decode('utf-8')
+        books_size_proper = int(books_size) * 1020
+
         total_storage = download_size_proper + tv_size_proper + \
             movie_size_proper + music_size_proper
+
+
+
 
         embed = discord.Embed(title="Storage and download information")
         embed.set_author(name="Shitbox Media Control Bot")
         embed.set_thumbnail(
             url="https://www.nicepng.com/png/full/502-5024580_business-data-storage-icon.png")
-        embed.add_field(name="Downloads", value=str(
+        embed.add_field(name="Downloads" + len(os.listdir(download_dir)), value=str(
             size(download_size_proper, system=alternative)), inline=False)
-        embed.add_field(name="TV shows", value=str(
+        embed.add_field(name="TV shows" + len(os.listdir(tv_dir)), value=str(
             size(tv_size_proper, system=alternative)), inline=False)
-        embed.add_field(name="Movies", value=str(
+        embed.add_field(name="Movies" + len(os.listdir(movie_dir)), value=str(
             size(movie_size_proper, system=alternative)), inline=False)
-        embed.add_field(name="Music", value=str(
+        embed.add_field(name="Music" + len(os.listdir(music_dir)), value=str(
             size(music_size_proper, system=alternative)), inline=False)
+        embed.add_field(name="Books" + len(os.listdir(books_dir)), value=str(
+            size(books_size_proper, system=alternative)), inline=False)
         embed.add_field(name="Summary", value="```Server is currently using " + str(size(total_storage, system=alternative)) +
                         " out of 35 TB (" + size(35000000000000 - total_storage, system=alternative) + " left)```", inline=False)
         await message.send(embed=embed)
