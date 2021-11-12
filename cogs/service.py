@@ -83,6 +83,36 @@ class Service(commands.Cog):
         embed.add_field(name=str(status_api_get_services.json()[7]["name"]) + " (" + str(ms_convert_7) + "ms) " + str(
             service_7_status), value="Operating at " + str(status_api_get_services.json()[7]["online_7_days"]) + "% uptime in the last 7 days", inline=False)
 
+        if str(status_api_get_services.json()[8]["online"]) == "True":
+            service_8_status = ":green_circle:"
+        else:
+            service_8_status = ":red_circle:"
+
+        ms_convert_8 = status_api_get_services.json()[8]["avg_response"] / 1000
+        embed.add_field(name=str(status_api_get_services.json()[8]["name"]) + " (" + str(ms_convert_8) + "ms) " + str(
+            service_8_status), value="Operating at " + str(status_api_get_services.json()[8]["online_7_days"]) + "% uptime in the last 7 days", inline=False)
+
+        if str(status_api_get_services.json()[9]["online"]) == "True":
+            service_9_status = ":green_circle:"
+        else:
+            service_9_status = ":red_circle:"
+
+        ms_convert_9 = status_api_get_services.json()[9]["avg_response"] / 1000
+        embed.add_field(name=str(status_api_get_services.json()[9]["name"]) + " (" + str(ms_convert_9) + "ms) " + str(
+            service_9_status), value="Operating at " + str(status_api_get_services.json()[9]["online_7_days"]) + "% uptime in the last 7 days", inline=False)
+
+
+        if str(status_api_get_services.json()[10]["online"]) == "True":
+            service_10_status = ":green_circle:"
+        else:
+            service_10_status = ":red_circle:"
+
+        ms_convert_10 = status_api_get_services.json()[10]["avg_response"] / 1000
+        embed.add_field(name=str(status_api_get_services.json()[10]["name"]) + " (" + str(ms_convert_10) + "ms) " + str(
+            service_10_status), value="Operating at " + str(status_api_get_services.json()[10]["online_7_days"]) + "% uptime in the last 7 days", inline=False)
+
+
+
         embed.set_thumbnail(
             url="https://support.apple.com/library/content/dam/edam/applecare/images/en_US/itunes/itunes-icloud-status-available-for-download-icon.png")
         await message.send(embed=embed)

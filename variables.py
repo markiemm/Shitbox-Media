@@ -6,7 +6,7 @@ download_dir = "/home/data/downloads"
 tv_dir = "/home/data/tv"
 movie_dir = "/home/data/movies"
 music_dir = "/home/data/music"
-
+books_dir = "/home/data/books"
 
 public_qbit = Client(host='qbit.shitbox.media', username=config["public_qbit"]["username"], password=config["public_qbit"]["password"])
 
