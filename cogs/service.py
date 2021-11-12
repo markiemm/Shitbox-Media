@@ -134,7 +134,7 @@ class Service(commands.Cog):
 
         embed = discord.Embed(title="Torrent info")
         embed.set_author(name="Shitbox Media Control Bot")
-        embed.add_field(name="Queue", value="```" + dStr + "```", inline=False)
+        embed.add_field(name="Queue", value="```" + dStr[:5500] + "```", inline=False)
         await message.send(embed=embed)
 
 
