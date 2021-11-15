@@ -2,7 +2,6 @@ import discord
 import requests
 import json
 import os
-import platform
 import sys
 import subprocess
 # import config
@@ -20,7 +19,6 @@ else:
     config = json.load(open("config.json", "r", encoding="utf-8"))
     print("Loaded the 'config.json' file")
 
-
 bot = commands.Bot(command_prefix=">")
 bot.remove_command("help")
 
@@ -29,22 +27,4 @@ for filename in os.listdir('./cogs'):
         bot.load_extension(f'cogs.{filename[:-3]}')
 
 
-@bot.event
-async def on_ready():
-    # bot.user instead of bot.user.name to print the bot with the discriminator
-    print(f"Logged in as {bot.user}")
-    print(f"Discord.py API version: {discord.__version__}")
-    print(f"Python version: {platform.python_version()}")
-    print(f"Running on: {platform.system()} {platform.release()} ({os.name})")
-    print("-"*22)
-    await bot.change_presence(activity=discord.Game("Shitbox"))
-    
 bot.run(config["discord_token"])
-
-
-@bot.event
-async def on_message(message):
-
-    if message.author == bot.user:
-        return
- 
