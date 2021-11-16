@@ -1,17 +1,10 @@
-import discord
-import requests
+import asyncio
 import json
 import os
 import sys
-import subprocess
-# import config
-from discord import channel
-#from discord.ext.commands.core import T, group
-from discord.member import flatten_user
-from discord.utils import valid_icon_size
-from discord.ext.commands import Bot
-from discord.ext import commands, tasks
-from hurry.filesize import alternative
+
+import discord
+from discord.ext import commands
 
 if not os.path.isfile("config.json"):
     sys.exit("'config.json' file could not be detected!")
@@ -19,12 +12,45 @@ else:
     config = json.load(open("config.json", "r", encoding="utf-8"))
     print("Loaded the 'config.json' file")
 
-bot = commands.Bot(command_prefix=">")
-bot.remove_command("help")
+try:
+    config = json.load(open("config.json", "r", encoding="utf-8"))
+    print("Loaded the 'config.json' file")
+except FileNotFoundError:
+    sys.exit("'config.json' file could not be detected!")
+except Exception as e:
+    sys.exit(f"Error: {e}")
 
+client = commands.Bot(command_prefix=">")
+client.remove_command("help")
+
+# Loading all the cogs in the ./cogs folder
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
-        bot.load_extension(f'cogs.{filename[:-3]}')
+        client.load_extension(f'cogs.{filename[:-3]}')
 
 
-bot.run(config["discord_token"])
+@commands.command()
+async def reload(message, *, extension_name):
+    """
+    Reload an extension(cog) from the client
+
+    Args:
+        message (commands.Context): Passed by default
+        extension_name (str): Cogs file name
+
+    Config.json edit:
+        {
+            manage_client_cogs:[624633250232401961,823400917960753202]
+        }
+    """
+    if message.author.id in config["manage_client_cogs"]:
+        clientmsg = await message.channel.send("Reloading the client... - *Please Wait*")
+        client.unload_extension(f'cogs.{extension_name[:-3]}')
+        # just time.sleep(5) will not work here as intended
+        await asyncio.sleep(3)
+        client.load_extension(f'cogs.{extension_name[:-3]}')
+        await clientmsg.edit(content="**Done!**")
+    else:
+        await message.channel.send("You do not have permission to use this command")
+
+client.run(config["discord_token"])

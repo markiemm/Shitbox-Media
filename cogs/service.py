@@ -10,15 +10,14 @@ from variables import public_qbit, private_qbit
 class Service(commands.Cog):
     def __init__(self, client):
         self.client = client
-        
 
     @commands.command()
     async def status(self, message):
         status_api_get_services = requests.get(
-        "http://status.shitbox.media/api/services?api=" + config["status_api_key"])
+            "http://status.shitbox.media/api/services?api=" + config["status_api_key"])
         embed = discord.Embed(title="Status for shitbox.media")
         embed.set_author(name="Shitbox Media Control Bot", url="https://shitbox.media",
-                        icon_url="https://media.discordapp.net/attachments/889169391038627872/891019443755421746/shitbox_logo_main.png?width=471&height=426")
+                         icon_url="https://media.discordapp.net/attachments/889169391038627872/891019443755421746/shitbox_logo_main.png?width=471&height=426")
 
         if str(status_api_get_services.json()[1]["online"]) == "True":
             service_1_status = ":green_circle:"
@@ -101,23 +100,19 @@ class Service(commands.Cog):
         embed.add_field(name=str(status_api_get_services.json()[9]["name"]) + " (" + str(ms_convert_9) + "ms) " + str(
             service_9_status), value="Operating at " + str(status_api_get_services.json()[9]["online_7_days"]) + "% uptime in the last 7 days", inline=False)
 
-
         if str(status_api_get_services.json()[10]["online"]) == "True":
             service_10_status = ":green_circle:"
         else:
             service_10_status = ":red_circle:"
 
-        ms_convert_10 = status_api_get_services.json()[10]["avg_response"] / 1000
+        ms_convert_10 = status_api_get_services.json()[
+            10]["avg_response"] / 1000
         embed.add_field(name=str(status_api_get_services.json()[10]["name"]) + " (" + str(ms_convert_10) + "ms) " + str(
             service_10_status), value="Operating at " + str(status_api_get_services.json()[10]["online_7_days"]) + "% uptime in the last 7 days", inline=False)
-
-
 
         embed.set_thumbnail(
             url="https://support.apple.com/library/content/dam/edam/applecare/images/en_US/itunes/itunes-icloud-status-available-for-download-icon.png")
         await message.send(embed=embed)
-        
-
 
     @commands.command()
     async def queue(self, message):
@@ -132,7 +127,8 @@ class Service(commands.Cog):
             dStr += 'Progress: '
             dStr += "%" + str((downloadStr[j]['progress'])) + '\n' + '\n'
 
-        embed = discord.Embed(title="Torrent queue", description="```" + dStr[:4080] + "```")
+        embed = discord.Embed(title="Torrent queue",
+                              description="```" + dStr[:4080] + "```")
         embed.set_author(name="Shitbox Media Control Bot")
         await message.send(embed=embed)
 
