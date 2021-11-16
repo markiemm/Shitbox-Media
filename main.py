@@ -65,10 +65,6 @@ async def reload(message, *, extension_name):
         message (commands.Context): Passed by default
         extension_name (str): Cogs file name
 
-    Config.json edit: (You dont want everyone to reload cogs of the bot)
-        {
-            manage_client_cogs:[624633250232401961,823400917960753202]
-        }
     """
     if message.author.id in config["manage_client_cogs"]:
         clientmsg = await message.channel.send("Reloading the client... - *Please Wait*")
