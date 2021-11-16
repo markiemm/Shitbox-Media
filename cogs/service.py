@@ -1,14 +1,12 @@
 import discord
-from discord.ext import commands
 import requests
-from qbittorrentapi import Client, client
-from qbittorrentapi import TorrentStates
-from main import config
-from variables import public_qbit, private_qbit
+from discord.ext import commands
+from utils.db import config
+from utils.vars import QbitVars
 
 
 class Service(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.command()
@@ -16,9 +14,8 @@ class Service(commands.Cog):
         status_api_get_services = requests.get(
             "http://status.shitbox.media/api/services?api=" + config["status_api_key"])
         embed = discord.Embed(title="Status for shitbox.media")
-        embed.set_author(name="Shitbox Media Control Bot", url="https://shitbox.media",
-                         icon_url="https://media.discordapp.net/attachments/889169391038627872/891019443755421746/shitbox_logo_main.png?width=471&height=426")
-
+        embed.set_author(name=f"{self.client.user.name}",
+                         icon_url=f"{self.client.user.avatar_url}")
         if str(status_api_get_services.json()[1]["online"]) == "True":
             service_1_status = ":green_circle:"
         else:
@@ -112,12 +109,14 @@ class Service(commands.Cog):
 
         embed.set_thumbnail(
             url="https://support.apple.com/library/content/dam/edam/applecare/images/en_US/itunes/itunes-icloud-status-available-for-download-icon.png")
+
         await message.send(embed=embed)
 
     @commands.command()
     async def queue(self, message):
         dStr = ''
-        downloadStr = public_qbit.torrents_info(status_filter='downloading')
+        downloadStr = QbitVars.public_qbit.torrents_info(
+            status_filter='downloading')
         print(downloadStr)
 
         if (not downloadStr):
@@ -129,9 +128,10 @@ class Service(commands.Cog):
 
         embed = discord.Embed(title="Torrent queue",
                               description="```" + dStr[:4080] + "```")
-        embed.set_author(name="Shitbox Media Control Bot")
+        embed.set_author(name=f"{self.client.user.name}",
+                         icon_url=f"{self.client.user.avatar_url}")
         await message.send(embed=embed)
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Service(client))
