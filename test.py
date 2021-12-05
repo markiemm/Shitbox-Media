@@ -1,22 +1,5 @@
-# import requests
-# import json
-# import config
+import shutil
+total, used, free = shutil.disk_usage("/run/media/hirusha/Local Drive 1TB/")
 
-# with open("config.json") as file:
-#     config = json.load(file)
-
-
-# status_api_get_services = requests.get("http://status.shitbox.media/api/services?api=" + config["status_api_key"])
-
-
-# print(status_api_get_services.json()[1]["online"])
-
-import json
-config = json.load(open("config.json", "r", encoding="utf-8"))
-print(config)
-print(type(config))
-
-if 101 % 2 == 1:
-    print("bruh")
-else:
-    print("test")
+total_disk_space = "Total: %d GiB" % ((total // (2**30))) 
+print(total_disk_space)

@@ -1,50 +1,88 @@
-import discord
-import requests
-import json
+__author__ = "Markiemm#0001"
+
+import asyncio
 import os
-import platform
-import sys
-import subprocess
-# import config
-from discord import channel
-#from discord.ext.commands.core import T, group
-from discord.member import flatten_user
-from discord.utils import valid_icon_size
-from discord.ext.commands import Bot
-from discord.ext import commands, tasks
-from hurry.filesize import alternative
-
-if not os.path.isfile("config.json"):
-    sys.exit("'config.json' file could not be detected!")
-else:
-    config = json.load(open("config.json", "r", encoding="utf-8"))
-    print("Loaded the 'config.json' file")
+import discord
+from discord.ext import commands
+from utils.db import config
 
 
-bot = commands.Bot(command_prefix=">")
-bot.remove_command("help")
+client = commands.Bot(command_prefix=">")
 
+
+# Loading all the cogs in the ./cogs folder
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
-        bot.load_extension(f'cogs.{filename[:-3]}')
+        client.load_extension(f'cogs.{filename[:-3]}')
 
 
-@bot.event
-async def on_ready():
-    # bot.user instead of bot.user.name to print the bot with the discriminator
-    print(f"Logged in as {bot.user}")
-    print(f"Discord.py API version: {discord.__version__}")
-    print(f"Python version: {platform.python_version()}")
-    print(f"Running on: {platform.system()} {platform.release()} ({os.name})")
-    print("-"*22)
-    await bot.change_presence(activity=discord.Game("Shitbox"))
-    
-bot.run(config["discord_token"])
+@client.command()
+async def load(message, *, extension_name):
+    """
+    Load an extension from the bot
+
+    Args:
+        message (commands.Context): Passed by default
+        extension_name (str): Cogs file name
+    """
+    if message.author.id in config["manage_client_cogs"]:
+        try:
+            client.load_extension(f'cogs.{extension_name[:-3]}')
+        except Exception as e:
+            await message.channel.send(f"Unable to load {extension_name[:-3]}**: - ```{e}```")
+            return
+        await message.channel.send(f"Loaded {extension_name[:-3]}**")
+    else:
+        await message.channel.send("You do not have permission to use this command")
 
 
-@bot.event
-async def on_message(message):
+@client.command()
+async def unload(message, *, extension_name):
+    """
+    Unload an extension from the bot
 
-    if message.author == bot.user:
-        return
- 
+    Args:
+        message (commands.Context): Passed by default
+        extension_name (str): Cogs file name
+    """
+    if message.author.id in config["manage_client_cogs"]:
+        try:
+            client.unload_extension(f'cogs.{extension_name[:-3]}')
+        except Exception as e:
+            await message.channel.send(f"Unable to unload {extension_name[:-3]}**: - ```{e}```")
+            return
+        await message.channel.send(f"Unloaded {extension_name[:-3]}**")
+    else:
+        await message.channel.send("You do not have permission to use this command")
+
+
+@client.command()
+async def reload(message, *, extension_name):
+    """
+    Reload an extension(cog) from the bot
+
+    Args:
+        message (commands.Context): Passed by default
+        extension_name (str): Cogs file name
+
+    """
+    if message.author.id in config["manage_client_cogs"]:
+        clientmsg = await message.channel.send("Reloading the client... - *Please Wait*")
+        try:
+            client.unload_extension(f'cogs.{extension_name[:-3]}')
+        except Exception as e:
+            await message.channel.send(f"Unable to unload {extension_name[:-3]}**: - ```{e}```")
+            return
+        # just time.sleep(5) will not work here as intended
+        await asyncio.sleep(3)
+        try:
+            client.load_extension(f'cogs.{extension_name[:-3]}')
+        except Exception as e:
+            await message.channel.send(f"Unable to load {extension_name[:-3]}**: - ```{e}```")
+            return
+        await clientmsg.edit(content="**Done!**")
+    else:
+        await message.channel.send("You do not have permission to use this command")
+
+
+client.run(config["discord_token"])
